@@ -14,7 +14,9 @@ export default class SQSEvents {
    * @param {any} [secretAccessKey=null]
    * @memberOf SQSEvents
    */
-  constructor({ queueUrl = required(), region = required(), shouldDeleteMessages = required() }, accessKeyId = null, secretAccessKey = null) {
+  constructor({ queueUrl = required(), region = required(), shouldDeleteMessages = required() },
+    accessKeyId = null,
+    secretAccessKey = null) {
     this.queueUrl = queueUrl;
     this.emitter = new EventEmitter();
 
@@ -58,24 +60,28 @@ export default class SQSEvents {
     return this;
   }
 
+  /**
+   * Stops the event stream
+   * @returns SQSEvents
+   * @memberOf SQSEvents
+   */
   stop() {
     this.timer.stop();
     return this;
   }
 
+  /**
+   * Callback for the timer
+   * @private
+   * @memberOf SQSEvents
+   */
   pushEvent() {
-    console.log('triggered');
-    
     this.client.receiveMessage({ QueueUrl: this.queueUrl })
       .promise()
       .then((res) => {
-        console.log('got a msg', res);
-        
         if (!res.data) {
           return;
         }
-
-        console.log('meee', res.data);
 
         this.emitter.emit('message', res.data);
       })
