@@ -1,8 +1,8 @@
 # Example
 
+```
 import Events from './index';
 
-```
 const e = new Events({
   queueUrl: 'Your queue URL', 
   region: 'us-east-1',
